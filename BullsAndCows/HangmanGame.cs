@@ -88,9 +88,9 @@ namespace BullsAndCows
         private void GenerateProgress()
         {
             StringBuilder sb = new();
-            foreach (var ch in HiddenWord)
+            foreach (var _ in HiddenWord)
             {
-                sb.Append("_");
+                sb.Append('_');
             }
             CurrentProgress = sb.ToString();
         }
