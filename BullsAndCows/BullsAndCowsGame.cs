@@ -8,36 +8,31 @@ namespace BullsAndCows
 {
     public class BullsAndCowsGame : GameBase, IGame
     {
-        public string Name => "Bulls and cows";
+        public string GameName => "Bulls and cows";
         public int Turns => GuessesMade;
-        private string Answer { get; set; }
-        private string Guess { get; set; }
-        private int GuessesMade { get; set; } = 0;
+        public string GetAnswer() => Answer;
+        public bool GameFinished => Answer == Guess;
 
         public BullsAndCowsGame(IGameIO gameIO) : base(gameIO)
         {
 
         }
 
+        private string Answer { get; set; }
+        private string Guess { get; set; }
+        private int GuessesMade { get; set; } = 0;
 
-        public string GetAnswer() => Answer;
-
-        public bool GameFinished => Answer == Guess;
 
 
         public bool ValidateInput(string input)
         {
-            bool validInput = input.All(ch => char.IsDigit(ch)) && input.Length == 4;
+            bool validInput = input.All(ch => char.IsDigit(ch)) && !string.IsNullOrWhiteSpace(input);
 
             if (!validInput)
                 return false;
 
-
-            if (!GameFinished)
-            {
-                GuessesMade++;
-                Guess = input;
-            }
+            GuessesMade++;
+            Guess = input;
             return true;
         }
 
@@ -51,9 +46,11 @@ namespace BullsAndCows
         {
             List<int> digits = new();
             Random rand = new();
+
             while (digits.Count < 4)
             {
                 int digit = rand.Next(10);
+
                 if (digits.Contains(digit))
                     continue;
 
@@ -69,54 +66,36 @@ namespace BullsAndCows
         {
             if (!GameFinished)
             {
-                string bulls = CheckBulls();
-                string cows = CheckCows();
-                return $"{bulls},{cows}";
+                return CheckBullsCows();
+                
 
             }
             return "BBBB,";
 
         }
 
-        private string CheckBulls()
+        private string CheckBullsCows()
         {
-            var stringBuilder = new StringBuilder();
-            for (int i = 0; i < Guess.Length; i++)
+            string bulls = "";
+            string cows = "";
+            for (int i = 0; i < 4; i++)
             {
-                if (Answer[i] == Guess[i])
-                    stringBuilder.Append('B');
-            }
-
-            return stringBuilder.ToString();
-        }
-        private string CheckCows()
-        {
-
-            StringBuilder stringBuilder = new();
-
-            List<char> checkedCharacters = new();
-
-            for(int i = 0; i < Guess.Length; i++)
-            {
-                var currentGuess = Guess[i];
-                var currentAnswer = Answer[i];
-
-                if (checkedCharacters.Contains(currentGuess))
-                    continue;
-
-                checkedCharacters.Add(currentGuess);
-
-                int cows = Answer.Count(ch => ch == currentGuess);
-                cows -= currentGuess == currentAnswer ? 1 : 0;
-                for (int j = 0; j < cows; j++)
+                for (int j = 0; j < Guess.Length; j++)
                 {
-                    stringBuilder.Append('C');
+                    bool samePositions = i == j;
+                    bool sameDigits = Answer[i] == Guess[j];
+
+
+
+                    if (samePositions && sameDigits)
+                            bulls += "B";
+
+                    else if(sameDigits)
+                        cows += "C";
+                    
                 }
-
-
             }
-
-            return stringBuilder.ToString();
+            return string.Format("{0},{1}", bulls, cows);
         }
 
         public string GetPlayerName()
@@ -126,8 +105,7 @@ namespace BullsAndCows
 
         public string OnFinish()
         {
-            CurrentPlayer.Update(GuessesMade);
-            SaveHiscores();
+            SaveHiscores(GuessesMade);
             return GetTopList();
         }
 

@@ -7,7 +7,7 @@ namespace BullsAndCows
     {
         public string GetString()
         {
-            return Console.ReadLine();
+            return Console.ReadLine().Trim();
         }
 
         public bool Continue()

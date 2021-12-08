@@ -12,7 +12,8 @@ namespace GameEngine
         protected IGameIO IO { get; set; }
         protected List<PlayerData> HiScores { get; set; }
         protected PlayerData CurrentPlayer { get; set; }
-        protected bool ReturningPlayer(string playerName) => HiScores is not null && HiScores.Any(p => p.Name == playerName);
+        protected bool ReturningPlayer(string playerName) => HiScores is not null && 
+                                                             HiScores.Any(p => p.Name == playerName);
         public GameBase(IGameIO gameIO)
         {
             IO = gameIO;
@@ -22,15 +23,16 @@ namespace GameEngine
         protected string GetTopList()
         {
             var builder = new StringBuilder();
-            var orderedByGuesses = HiScores.OrderByDescending(player => player.GamesPlayed);
+            var playersOrderedByGuesses = HiScores.OrderByDescending(player => player.GamesPlayed)
+                                                  .ThenByDescending(player => player.AverageGuesses);
 
             builder.AppendLine("Current leaderboard:");
             builder.AppendLine(string.Format("|{0,10}|{1,5}|{2,7}|{3,7}|", "Name", "Games", "Guesses", "Average"));
 
-            foreach (var stats in orderedByGuesses)
+            foreach (var player in playersOrderedByGuesses)
             {
                 builder.AppendLine(string.Format("|{0,10}|{1,5}|{2,7}|{3,7}|", 
-                                   stats.Name, stats.GamesPlayed, stats.TotalGuesses, stats.AverageGuesses));
+                                   player.Name, player.GamesPlayed, player.TotalGuesses, player.AverageGuesses));
             }
 
             return builder.ToString();
@@ -55,9 +57,10 @@ namespace GameEngine
                 HiScores = new();
         }
 
-        protected void SaveHiscores()
+        protected void SaveHiscores(int guesses)
         {
-            IO.SavePlayerData(CurrentPlayer);
+            IO.SavePlayerData(CurrentPlayer.Name, guesses);
+            CurrentPlayer.Update(guesses);
         }
 
         protected void AddPlayer(string playerName)

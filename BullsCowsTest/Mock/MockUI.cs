@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BullsCowsTest
+namespace BullsCowsTest.Mocks
 {
     internal class MockUI : IUI
     {

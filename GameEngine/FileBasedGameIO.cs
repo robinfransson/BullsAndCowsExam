@@ -27,30 +27,35 @@ namespace GameEngine
                 File.Create(_dataFile)
                     .Close();
         }
+        static int Guesses(string line)
+        {
+            string guesses = line.Split("#&#")[1];
+            if (int.TryParse(guesses, out int result))
+            {
+                return result;
+            }
+            return 0;
+        }
+
+        static string PlayerName(string line) => line.Split("#&#")[0];
 
         public List<PlayerData> GetPlayerData()
         {
             List<PlayerData> result = new List<PlayerData>();
+
             var fileContents = File.ReadAllLines(_dataFile)
                                    .Where(line => !string.IsNullOrWhiteSpace(line))
-                                   .ToArray();
+                                   .GroupBy(PlayerName);
 
 
-            for (int i = 0; i < fileContents.Length; i++)
+            foreach(var group in fileContents)
             {
-                try
-                {
+                string name = group.Key;
+                int gamesPlayed = group.Count();
+                int totalGuesses = group.Sum(x => Guesses(x));
+                var player = new PlayerData(group.Key, gamesPlayed, totalGuesses);
 
-                    string[] data = fileContents[i].Split("#&#");
-                    string name = data[0];
-                    int gamesPlayed = int.Parse(data[1]);
-                    int totalGuesses = int.Parse(data[2]);
-                    result.Add(new PlayerData(name, gamesPlayed, totalGuesses));
-                }
-                catch (FormatException)
-                {
-                    continue;
-                }
+                result.Add(player);
             }
 
             return result;
@@ -59,21 +64,10 @@ namespace GameEngine
         }
 
 
-        public void SavePlayerData(PlayerData currentPlayer)
+        public void SavePlayerData(string name, int guesses)
         {
-            var fileContents = File.ReadAllLines(_dataFile).ToList();
-            var playerData = fileContents.FirstOrDefault(line => line.StartsWith(currentPlayer.Name));
-            
-            if (playerData != null)
-            {
-                int lineNumber = fileContents.IndexOf(playerData);
-                fileContents[lineNumber] = currentPlayer.ToString();
-                File.WriteAllLines(_dataFile, fileContents);
-            }
-            else
-            {
-                File.AppendAllText(_dataFile, currentPlayer.ToString() + Environment.NewLine);
-            }
+            var playerData = $"{name}#&#{guesses}";
+            File.AppendAllText(_dataFile, playerData + Environment.NewLine);
         }
 
     }

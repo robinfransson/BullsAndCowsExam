@@ -14,7 +14,7 @@ namespace BullsAndCows
         }
         public void Run()
         {
-            _ui.PutString($"Welcome to {_game.Name}");
+            _ui.PutString($"Welcome to {_game.GameName}");
             _ui.PutString("Enter your name:");
 
             string name = _ui.GetString();
@@ -39,9 +39,9 @@ namespace BullsAndCows
             {
                 _ui.PutString("Enter a guess: ");
                 string guess = _ui.GetString();
-                bool validInout = _game.ValidateInput(guess);
+                bool validInput = _game.ValidateInput(guess);
 
-                if (!validInout)
+                if (!validInput)
                     continue;
 
                 string result = _game.CheckAnswer();

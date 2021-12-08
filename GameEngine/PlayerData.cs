@@ -20,6 +20,7 @@ namespace GameEngine
         {
             Name = name;
         }
+
         public PlayerData(string name, int gamesPlayed, int totalGuesses)
         {
             Name = name;
@@ -40,17 +41,17 @@ namespace GameEngine
 
         }
 
-        private bool Equals(PlayerData otherData)
+        private bool Equals(PlayerData other)
         {
-            return otherData != null &&
-                   otherData.TotalGuesses == this.TotalGuesses &&
-                   otherData.GamesPlayed == this.GamesPlayed &&
-                   otherData.Name == this.Name;
+            return other != null &&
+                   other.TotalGuesses == this.TotalGuesses &&
+                   other.GamesPlayed == this.GamesPlayed &&
+                   other.Name == this.Name;
         }
 
         public override string ToString()
         {
-            return $"{Name}#&#{GamesPlayed}#&#{TotalGuesses}";
+            return $"{Name}#&#{TotalGuesses}";
         }
 
         public override int GetHashCode()

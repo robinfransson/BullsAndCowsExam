@@ -6,25 +6,23 @@ using System.Text;
 
 namespace BullsAndCows
 {
-    public class HangmanGame : GameBase, IGame
+    public class WordGuessGame : GameBase, IGame
     {
-        private string[] words = { "prins", "slott", "barmhärtighetsinrättningarnas" };
-
-        public string Name => "Hangman";
-
-        public int Turns => Turns;
-
+        public string GameName => "Guess the word";
+        public int Turns => Guesses;
         public bool GameFinished => !CurrentProgress.Any(ch => ch == '_');
-
         private string HiddenWord { get; set; }
         private string CurrentProgress { get; set; }
         private int Guesses { get; set; }
         private string Guess { get; set; }
+
+        private string[] words = { "prins", "slott", "apelsin", "program" };
+
         private List<char> alreadyGuessed = new();
 
 
 
-        public HangmanGame(IGameIO gameIO) : base(gameIO)
+        public WordGuessGame(IGameIO gameIO) : base(gameIO)
         {
         }
 
@@ -44,6 +42,9 @@ namespace BullsAndCows
             return CurrentProgress;
         }
 
+
+
+
         private void UpdateProgress(char character)
         {
             var sb = new StringBuilder(CurrentProgress);
@@ -55,22 +56,30 @@ namespace BullsAndCows
             CurrentProgress = sb.ToString();
         }
 
+
+
+
         public string GetAnswer()
         {
             return HiddenWord;
         }
+
+
 
         public string GetPlayerName()
         {
             return CurrentPlayer.Name;
         }
 
+
+
         public string OnFinish()
         {
-            CurrentPlayer.Update(Turns);
-            base.SaveHiscores();
+            base.SaveHiscores(Guesses);
             return GetTopList();
         }
+
+
 
         public void ResetGame()
         {
@@ -81,12 +90,16 @@ namespace BullsAndCows
             alreadyGuessed = new();
         }
 
+
+
         public void SetupGame(string playerName)
         {
             base.Setup(playerName);
             SetHiddenWord();
             GenerateProgress();
         }
+
+
 
         private void GenerateProgress()
         {
@@ -98,11 +111,15 @@ namespace BullsAndCows
             CurrentProgress = sb.ToString();
         }
 
+
+
         private void SetHiddenWord()
         {
             Random rand = new();
             HiddenWord = words[rand.Next(words.Length)];
         }
+
+
 
         public bool ValidateInput(string input)
         {

@@ -8,7 +8,7 @@ namespace GameEngine
 {
     public interface IGame
     {
-        string Name { get; }
+        string GameName { get; }
         int Turns { get; }
         bool GameFinished { get; }
         string GetAnswer();

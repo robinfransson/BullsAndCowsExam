@@ -1,10 +1,11 @@
 using BullsAndCows;
+using BullsCowsTest.Mocks;
 using GameEngine;
 using NUnit.Framework;
 
 namespace BullsCowsTest
 {
-    public class Tests
+    public class GeneralGameTests
     {
         MockUI ui = null;
         MockIO GameIO = null;
@@ -42,17 +43,25 @@ namespace BullsCowsTest
         public void Game_Is_Resetable()
         {
             game.SetupGame("Robin");
-            var answerPreReset = game.GetAnswer();
+            var answerBeforeReset = game.GetAnswer();
 
-            game.ValidateInput(answerPreReset);
-            string progressPreReset = game.CheckAnswer();
+            game.ValidateInput(answerBeforeReset);
+            string progressBeforeReset = game.CheckAnswer();
             bool gameFinished = game.GameFinished;
-
             game.ResetGame();
-            Assert.That(answerPreReset, Is.Not.EqualTo(game.GetAnswer()));
-            Assert.That(progressPreReset, Is.Not.EqualTo(game.CheckAnswer()));
-            Assert.That(gameFinished, Is.False);
 
+            Assert.That(gameFinished, Is.True);
+
+            game.SetupGame("Robin");
+            game.ValidateInput(game.GetAnswer().Substring(0,2));
+            Assert.That(answerBeforeReset, Is.Not.EqualTo(game.GetAnswer()));
+            Assert.That(progressBeforeReset, Is.Not.EqualTo(game.CheckAnswer()));
+            Assert.That(game.GameFinished, Is.False);
+
+        }
+
+        public void IO_Can_Load_From_File()
+        {
         }
 
 
