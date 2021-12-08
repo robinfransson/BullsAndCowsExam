@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    public interface IGameIO
+    public interface IUI
     {
-        List<PlayerData> GetPlayerData();
-        void SavePlayerData(PlayerData playerData);
+        void PutString(string s);
+        string GetString();
+        bool Continue();
     }
 }

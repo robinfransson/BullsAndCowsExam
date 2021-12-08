@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 
-namespace ConsoleApp1
+namespace MooGame
 {
-    internal class Program
-    {
+	class MainClass
+	{
+
 		public static void Main(string[] args)
 		{
 
@@ -17,12 +18,12 @@ namespace ConsoleApp1
 			{
 				string goal = makeGoal();
 
-
+				
 				Console.WriteLine("New game:\n");
 				//comment out or remove next line to play real games!
 				Console.WriteLine("For practice, number is: " + goal + "\n");
 				string guess = Console.ReadLine();
-
+				
 				int nGuess = 1;
 				string bbcc = checkBC(goal, guess);
 				Console.WriteLine(bbcc + "\n");
@@ -54,7 +55,12 @@ namespace ConsoleApp1
 			{
 				int random = randomGenerator.Next(10);
 				string randomDigit = "" + random;
-				goal += randomDigit;
+				while (goal.Contains(randomDigit))
+				{
+					random = randomGenerator.Next(10);
+					randomDigit = "" + random;
+				}
+				goal = goal + randomDigit;
 			}
 			return goal;
 		}
@@ -104,8 +110,8 @@ namespace ConsoleApp1
 				{
 					results[pos].Update(guesses);
 				}
-
-
+				
+				
 			}
 			results.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
 			Console.WriteLine("Player   games average");
@@ -120,9 +126,9 @@ namespace ConsoleApp1
 	class PlayerData
 	{
 		public string Name { get; private set; }
-		public int NGames { get; private set; }
+        public int NGames { get; private set; }
 		int totalGuess;
-
+		
 
 		public PlayerData(string name, int guesses)
 		{
@@ -142,15 +148,15 @@ namespace ConsoleApp1
 			return (double)totalGuess / NGames;
 		}
 
-
-		public override bool Equals(Object p)
+		
+	    public override bool Equals(Object p)
 		{
 			return Name.Equals(((PlayerData)p).Name);
 		}
 
-
-		public override int GetHashCode()
-		{
+		
+	    public override int GetHashCode()
+        {
 			return Name.GetHashCode();
 		}
 	}

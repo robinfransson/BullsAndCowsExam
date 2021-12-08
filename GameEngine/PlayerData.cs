@@ -7,29 +7,26 @@ using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    public class PlayerData : IPlayerData
+    public class PlayerData
     {
-        [JsonInclude]
         public string Name { get; private set; }
-
-        [JsonInclude]
         public int TotalGuesses { get; private set; }
-
-        [JsonInclude]
         public int GamesPlayed { get; private set; }
 
-        public double AverageGuesses => (double)TotalGuesses / GamesPlayed;
-
-        public PlayerData()
-        {
-
-        }
+        public double AverageGuesses => Math.Round((double)TotalGuesses / GamesPlayed, 2);
 
 
         public PlayerData(string name)
         {
             Name = name;
         }
+        public PlayerData(string name, int gamesPlayed, int totalGuesses)
+        {
+            Name = name;
+            GamesPlayed = gamesPlayed;
+            TotalGuesses = totalGuesses;
+        }
+
 
         public void Update(int guesses)
         {
@@ -51,6 +48,10 @@ namespace GameEngine
                    otherData.Name == this.Name;
         }
 
+        public override string ToString()
+        {
+            return $"{Name}#&#{GamesPlayed}#&#{TotalGuesses}";
+        }
 
         public override int GetHashCode()
         {

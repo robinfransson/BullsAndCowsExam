@@ -18,11 +18,11 @@ namespace BullsAndCows
                 {
                     case ConsoleKey.D1:
                         IGameIO hangmanIO = new FileBasedGameIO("hangman.txt");
-                        new ConsoleGame(new HangmanGame(hangmanIO)).Start();
+                        new GameController(new HangmanGame(hangmanIO), new ConsoleUI()).Run();
                         break;
                     case ConsoleKey.D2:
                         IGameIO io = new FileBasedGameIO("bullscows.txt");
-                        new ConsoleGame(new BullsAndCows(io)).Start();
+                        new GameController(new BullsAndCowsGame(io), new ConsoleUI()).Run();
                         break;
                     default:
                         break;

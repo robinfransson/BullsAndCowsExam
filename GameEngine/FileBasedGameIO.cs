@@ -30,23 +30,51 @@ namespace GameEngine
 
         public List<PlayerData> GetPlayerData()
         {
-            try
-            {
-            var fileContents = File.ReadAllText(_dataFile);
-            return JsonSerializer.Deserialize<List<PlayerData>>(fileContents);
+            List<PlayerData> result = new List<PlayerData>();
+            var fileContents = File.ReadAllLines(_dataFile)
+                                   .Where(line => !string.IsNullOrWhiteSpace(line))
+                                   .ToArray();
 
-            }
-            catch(JsonException)
+
+            for (int i = 0; i < fileContents.Length; i++)
             {
-                return new();
+                try
+                {
+
+                    string[] data = fileContents[i].Split("#&#");
+                    string name = data[0];
+                    int gamesPlayed = int.Parse(data[1]);
+                    int totalGuesses = int.Parse(data[2]);
+                    result.Add(new PlayerData(name, gamesPlayed, totalGuesses));
+                }
+                catch (FormatException)
+                {
+                    continue;
+                }
             }
+
+            return result;
+
+
         }
 
 
-        public void SavePlayerData(IEnumerable<PlayerData> playerData)
+        public void SavePlayerData(PlayerData currentPlayer)
         {
-            var playerDataJson = JsonSerializer.Serialize(playerData);
-            File.WriteAllText(_dataFile, playerDataJson);
+            var fileContents = File.ReadAllLines(_dataFile).ToList();
+            var playerData = fileContents.FirstOrDefault(line => line.StartsWith(currentPlayer.Name));
+            
+            if (playerData != null)
+            {
+                int lineNumber = fileContents.IndexOf(playerData);
+                fileContents[lineNumber] = currentPlayer.ToString();
+                File.WriteAllLines(_dataFile, fileContents);
+            }
+            else
+            {
+                File.AppendAllText(_dataFile, currentPlayer.ToString() + Environment.NewLine);
+            }
         }
+
     }
 }

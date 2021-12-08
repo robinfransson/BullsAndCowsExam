@@ -6,30 +6,33 @@ using System.Text;
 
 namespace BullsAndCows
 {
-    internal class HangmanGame : GameBase, IGame
+    public class HangmanGame : GameBase, IGame
     {
         private string[] words = { "prins", "slott", "barmhärtighetsinrättningarnas" };
 
         public string Name => "Hangman";
 
-        public int Turns => turns;
+        public int Turns => Turns;
 
         public bool GameFinished => !CurrentProgress.Any(ch => ch == '_');
 
         private string HiddenWord { get; set; }
-        private string CurrentProgress = "";
-        private int turns = 0;
-        private string guess = "";
+        private string CurrentProgress { get; set; }
+        private int Guesses { get; set; }
+        private string Guess { get; set; }
         private List<char> alreadyGuessed = new();
+
+
+
         public HangmanGame(IGameIO gameIO) : base(gameIO)
         {
         }
 
         public string CheckAnswer()
         {
-            foreach (var character in guess)
+            foreach (var character in Guess)
             {
-                turns++;
+                Guesses++;
                 if (alreadyGuessed.Contains(character))
                     continue;
 
@@ -64,38 +67,38 @@ namespace BullsAndCows
 
         public string OnFinish()
         {
-            CurrentPlayer.Update(turns);
+            CurrentPlayer.Update(Turns);
             base.SaveHiscores();
             return GetTopList();
         }
 
         public void ResetGame()
         {
-            GetHiddenWord();
+            SetHiddenWord();
             GenerateProgress();
-            turns = 0;
-            guess = "";
+            Guesses = 0;
+            Guess = "";
             alreadyGuessed = new();
         }
 
         public void SetupGame(string playerName)
         {
             base.Setup(playerName);
-            GetHiddenWord();
+            SetHiddenWord();
             GenerateProgress();
         }
 
         private void GenerateProgress()
         {
             StringBuilder sb = new();
-            foreach (var _ in HiddenWord)
+            while(sb.Length != HiddenWord.Length)
             {
                 sb.Append('_');
             }
             CurrentProgress = sb.ToString();
         }
 
-        private void GetHiddenWord()
+        private void SetHiddenWord()
         {
             Random rand = new();
             HiddenWord = words[rand.Next(words.Length)];
@@ -106,7 +109,7 @@ namespace BullsAndCows
             if (input.Any(ch => char.IsDigit(ch)) || string.IsNullOrWhiteSpace(input))
                 return false;
 
-            guess = input;
+            Guess = input;
             return true;
         }
     }

@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BullsAndCows
 {
-    internal class BullsAndCows : GameBase, IGame
+    public class BullsAndCowsGame : GameBase, IGame
     {
         public string Name => "Bulls and cows";
         public int Turns => GuessesMade;
@@ -15,7 +14,7 @@ namespace BullsAndCows
         private string Guess { get; set; }
         private int GuessesMade { get; set; } = 0;
 
-        public BullsAndCows(IGameIO gameIO) : base(gameIO)
+        public BullsAndCowsGame(IGameIO gameIO) : base(gameIO)
         {
 
         }
@@ -50,13 +49,18 @@ namespace BullsAndCows
 
         private void GenerateAnswer()
         {
-            var stringBuilder = new StringBuilder();
+            List<int> digits = new();
             Random rand = new();
-            while (stringBuilder.Length < 4)
+            while (digits.Count < 4)
             {
-                stringBuilder.Append(rand.Next(10));
+                int digit = rand.Next(10);
+                if (digits.Contains(digit))
+                    continue;
+
+                digits.Add(digit);
+
             }
-            Answer = stringBuilder.ToString();
+            Answer = string.Join("", digits);
         }
 
 
@@ -70,7 +74,7 @@ namespace BullsAndCows
                 return $"{bulls},{cows}";
 
             }
-            return "BBBB";
+            return "BBBB,";
 
         }
 
@@ -92,18 +96,19 @@ namespace BullsAndCows
 
             List<char> checkedCharacters = new();
 
-            foreach (var digit in Guess)
+            for(int i = 0; i < Guess.Length; i++)
             {
-                var currentIndex = Guess.IndexOf(digit);
-                var currentGuess = Guess[currentIndex];
-                var currentAnswer = Answer[currentIndex];
-                if (checkedCharacters.Contains(digit))
+                var currentGuess = Guess[i];
+                var currentAnswer = Answer[i];
+
+                if (checkedCharacters.Contains(currentGuess))
                     continue;
 
-                checkedCharacters.Add(digit);
-                int cows = Answer.Count(ch => ch == digit);
+                checkedCharacters.Add(currentGuess);
+
+                int cows = Answer.Count(ch => ch == currentGuess);
                 cows -= currentGuess == currentAnswer ? 1 : 0;
-                for (int i = 0; i < cows; i++)
+                for (int j = 0; j < cows; j++)
                 {
                     stringBuilder.Append('C');
                 }
@@ -123,8 +128,6 @@ namespace BullsAndCows
         {
             CurrentPlayer.Update(GuessesMade);
             SaveHiscores();
-            //$"{player.Name} {player.GamesPlayed} {player.Guesses} {player.AverageGuesses()}
-
             return GetTopList();
         }
 
