@@ -118,7 +118,7 @@ namespace BullsCowsTest
             _game.MakeGuess(answer);
             _game.SaveScore();
 
-            string actual = result.Trim();
+            string actual = result.Trim(); 
 
             Assert.That(actual, Is.EqualTo("Robin#&#1"));
 

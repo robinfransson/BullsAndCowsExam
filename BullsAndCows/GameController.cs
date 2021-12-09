@@ -19,10 +19,10 @@ namespace BullsAndCows
 
             string name = _ui.GetInput();
             _game.SetPlayerName(name);
+            _game.SetupGame();
             do
             {
                 _ui.Clear();
-                _game.SetupGame();
                 _ui.Output("For testing: answer is " + _game.GetAnswer());
                 PlayGame();
             }

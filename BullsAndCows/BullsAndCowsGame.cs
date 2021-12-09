@@ -28,10 +28,14 @@ namespace BullsAndCows
             IO = gameIO;
         }
 
+
+
         public void SetPlayerName(string name)
         {
             PlayerName = name;
         }
+
+
 
         public void MakeGuess(string input)
         {
@@ -45,6 +49,8 @@ namespace BullsAndCows
         }
 
 
+
+
         public string GetProgress()
         {
             if (!GameFinished)
@@ -56,12 +62,14 @@ namespace BullsAndCows
 
         }
 
+
        
         public List<PlayerData> GetPlayers()
         {
 
             return IO.GetPlayerData();
         }
+
 
 
 
@@ -83,20 +91,22 @@ namespace BullsAndCows
 
         private void SetAnswer()
         {
-            List<int> digits = new();
+            var digits = Enumerable.Range(0, 10).ToList();
+            List<int> selectedNumbers = new();
             Random rand = new();
 
-            while (digits.Count < 4)
+            while (selectedNumbers.Count < 4)
             {
-                int digit = rand.Next(10);
+                int index = rand.Next(digits.Count);
+                int selectedNumber = digits[index];
 
-                if (digits.Contains(digit))
-                    continue;
+                
+                selectedNumbers.Add(selectedNumber);
+                digits.RemoveAt(index);
 
-                digits.Add(digit);
 
             }
-            Answer = string.Join("", digits);
+            Answer = string.Join("", selectedNumbers);
         }
 
 
