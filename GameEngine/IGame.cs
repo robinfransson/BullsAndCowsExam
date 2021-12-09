@@ -16,7 +16,7 @@ namespace GameEngine
         string GetProgress();
         void SetupGame();
         void MakeGuess(string input);
-        IEnumerable<PlayerData> GetHiscores();
+        List<PlayerData> GetPlayers();
         void Reset();
         void SaveScore();
 

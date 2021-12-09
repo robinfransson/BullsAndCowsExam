@@ -10,9 +10,11 @@ namespace BullsAndCows
 
         public static void Main(string[] args)
         {
-            IGameIO io = new FileBasedGameIO("result.txt");
-            IUI ui = new ConsoleUI();
-            var controller = new GameController(new BullsAndCowsGame(io), ui);
+            IFileIOWrapper wrapper = new FileIOWrapper();
+            IGameIO io = new FileBasedGameIO("result.txt", wrapper);
+            IGameUI ui = new ConsoleUI();
+            IGame game = new BullsAndCowsGame(io);
+            var controller = new GameController(game, ui);
             controller.Run();
         }
     }

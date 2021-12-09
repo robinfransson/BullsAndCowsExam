@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    public interface IUI
+    public interface IGameUI
     {
         void Output(string s);
         string GetInput();

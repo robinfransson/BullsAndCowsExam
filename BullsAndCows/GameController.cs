@@ -6,8 +6,8 @@ namespace BullsAndCows
     public class GameController
     {
         private readonly IGame _game;
-        private readonly IUI _ui;
-        public GameController(IGame game, IUI ui)
+        private readonly IGameUI _ui;
+        public GameController(IGame game, IGameUI ui)
         {
             _game = game;
             _ui = ui;
@@ -21,10 +21,10 @@ namespace BullsAndCows
             _game.SetPlayerName(name);
             do
             {
+                _ui.Clear();
                 _game.SetupGame();
                 _ui.Output("For testing: answer is " + _game.GetAnswer());
                 PlayGame();
-
             }
             while (Playing());
         }
@@ -43,7 +43,7 @@ namespace BullsAndCows
             _ui.Output($"Completed the game in {_game.Turns} turns!");
             _game.SaveScore();
 
-            var scores = _game.GetHiscores();
+            var scores = _game.GetPlayers();
             _ui.ShowHiscores(scores);
         }
 

@@ -12,21 +12,21 @@ namespace GameEngine
     public class FileBasedGameIO : IGameIO
     {
         private readonly string _dataFile;
+        private readonly IFileIOWrapper _ioWrapper;
 
-
-        public FileBasedGameIO(string dataFile)
+        public FileBasedGameIO(string dataFile, IFileIOWrapper wrapper)
         {
             _dataFile = dataFile;
+            _ioWrapper = wrapper;
             MakeSureFileExist();
 
         }
 
         private void MakeSureFileExist()
         {
-            if (!File.Exists(_dataFile))
+            if (!_ioWrapper.Exists(_dataFile))
             {
-                File.Create(_dataFile)
-                    .Close();
+                _ioWrapper.Create(_dataFile);
             }
         }
 
@@ -36,19 +36,20 @@ namespace GameEngine
         {
             List<PlayerData> players = new();
 
-            var fileContents = File.ReadAllLines(_dataFile);
+            var groupedByUsername = _ioWrapper.ReadAllLines(_dataFile)
+                                   .Where(line => !string.IsNullOrWhiteSpace(line))
+                                   .GroupBy(Username);
 
-            var groupedByName = fileContents.Where(line => !string.IsNullOrWhiteSpace(line))
-                                            .GroupBy(GetPlayerName);
+                                            
 
 
-            foreach(var group in groupedByName)
+            foreach(var playerData in groupedByUsername)
             {
-                string name = group.Key;
-                int gamesPlayed = group.Count();
-                int totalGuesses = group.Sum(x => GetGuesses(x));
+                string name = playerData.Key;
+                int gamesPlayed = playerData.Count();
+                int totalGuesses = playerData.Sum(x => Guesses(x));
 
-                var player = new PlayerData(group.Key, gamesPlayed, totalGuesses);
+                var player = new PlayerData(name, gamesPlayed, totalGuesses);
 
                 players.Add(player);
             }
@@ -61,23 +62,25 @@ namespace GameEngine
 
         public void SavePlayerData(string name, int guesses)
         {
-            var playerData = $"{name}#&#{guesses}";
-            File.AppendAllText(_dataFile, playerData + Environment.NewLine);
+            var data = $"{name}#&#{guesses}";
+
+            _ioWrapper.AppendAllText(_dataFile, data + Environment.NewLine);
         }
 
 
-        private string GetPlayerName(string line) => line.Split("#&#")[0];
+        private string Username(string line) => line.Split("#&#")[0];
 
-        private int GetGuesses(string line)
+        private int Guesses(string line)
         {
-            string guesses = line.Split("#&#")[1];
-
-            if (int.TryParse(guesses, out int result))
+            try
             {
-                return result;
+                string guesses = line.Split("#&#")[1];
+                return int.Parse(guesses);
             }
-
-            return 0;
+            catch(Exception)
+            {
+                return 0;
+            }
         }
 
 

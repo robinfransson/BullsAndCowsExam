@@ -28,9 +28,6 @@ namespace BullsAndCows
             IO = gameIO;
         }
 
-
-
-
         public void SetPlayerName(string name)
         {
             PlayerName = name;
@@ -60,11 +57,10 @@ namespace BullsAndCows
         }
 
        
-        public IEnumerable<PlayerData> GetHiscores()
+        public List<PlayerData> GetPlayers()
         {
 
-            var players = IO.GetPlayerData();
-            return players.OrderBy(player => player.AverageGuesses);
+            return IO.GetPlayerData();
         }
 
 
@@ -111,7 +107,7 @@ namespace BullsAndCows
             string cows = "";
             for (int i = 0; i < Answer.Length; i++)
             {
-                for (int j = 0; j < Guess.Length; j++)
+                for (int j = 0; j < Guess?.Length; j++)
                 {
                     bool samePositions = i == j;
                     bool sameDigits = Answer[i] == Guess[j];

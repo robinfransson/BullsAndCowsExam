@@ -16,10 +16,6 @@ namespace GameEngine
         public double AverageGuesses => Math.Round((double)TotalGuesses / GamesPlayed, 2);
 
 
-        public PlayerData(string name)
-        {
-            Name = name;
-        }
 
         public PlayerData(string name, int gamesPlayed, int totalGuesses)
         {
@@ -28,12 +24,6 @@ namespace GameEngine
             TotalGuesses = totalGuesses;
         }
 
-
-        public void Update(int guesses)
-        {
-            TotalGuesses += guesses;
-            GamesPlayed++;
-        }
 
         public override bool Equals(object obj)
         {
@@ -49,10 +39,6 @@ namespace GameEngine
                    other.Name == this.Name;
         }
 
-        public override string ToString()
-        {
-            return $"{Name}#&#{TotalGuesses}";
-        }
 
         public override int GetHashCode()
         {
