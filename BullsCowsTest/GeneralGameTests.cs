@@ -15,54 +15,47 @@ namespace BullsCowsTest
         public void Setup()
         {
             GameIO = new MockIO();
-            game = new BullsAndCowsGame(GameIO);
+            game = new WordGuessGame(GameIO);
             ui = new MockUI();
+            game.SetupGame();
+            game.SetPlayerName("Robin");
         }
 
-        [Test]
-        public void Setup_Creates_Player_When_List_Is_Empty()
-        {
-            GameIO.Data = new();
-            game.SetupGame("Robin");
-            Assert.That(game.GetPlayerName(), Is.EqualTo("Robin"));
-        }
 
         [Test]
         public void Game_Is_Completed_When_Answer_Is_Correct()
         {
-            game.SetupGame("Robin");
             var answer = game.GetAnswer();
-            TestContext.WriteLine("the answer is " + answer);
-            game.ValidateInput(answer);
-            string progress = game.CheckAnswer();
-            TestContext.WriteLine("the progress is " + progress);
+            game.MakeGuess(answer);
+
+
             Assert.That(game.GameFinished, Is.True);
         }
 
         [Test]
         public void Game_Is_Resetable()
         {
-            game.SetupGame("Robin");
             var answerBeforeReset = game.GetAnswer();
 
-            game.ValidateInput(answerBeforeReset);
-            string progressBeforeReset = game.CheckAnswer();
+            game.MakeGuess(answerBeforeReset);
+            string progressBeforeReset = game.GetProgress();
             bool gameFinished = game.GameFinished;
-            game.ResetGame();
 
-            Assert.That(gameFinished, Is.True);
+            game.Reset();
+            game.MakeGuess("1");
+            string answer = game.GetAnswer();
+            string progress = game.GetProgress();
 
-            game.SetupGame("Robin");
-            game.ValidateInput(game.GetAnswer().Substring(0,2));
-            Assert.That(answerBeforeReset, Is.Not.EqualTo(game.GetAnswer()));
-            Assert.That(progressBeforeReset, Is.Not.EqualTo(game.CheckAnswer()));
-            Assert.That(game.GameFinished, Is.False);
 
+            Assert.Multiple(() =>
+            {
+                Assert.That(answerBeforeReset, Is.Not.EqualTo(answer));
+                Assert.That(progressBeforeReset, Is.Not.EqualTo(progress));
+                Assert.That(game.GameFinished, Is.False);
+            });
+            
         }
 
-        public void IO_Can_Load_From_File()
-        {
-        }
 
 
     }

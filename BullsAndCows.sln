@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameEngine", "GameEngine\GameEngine.csproj", "{2E43A269-4803-4C91-8267-9BAF4EE904FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UlfsEgenRefaktorisering", "UlfsEgenRefaktorisering\UlfsEgenRefaktorisering.csproj", "{4DE2C259-A9A6-43D1-9F6C-B8A53BCA2611}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UlfsEgenRefaktorisering", "UlfsEgenRefaktorisering\UlfsEgenRefaktorisering.csproj", "{4DE2C259-A9A6-43D1-9F6C-B8A53BCA2611}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BullsCowsTest", "BullsCowsTest\BullsCowsTest.csproj", "{6A50B0D6-0431-43D7-854E-8756AEC8E012}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "BullsCowsTest\UnitTests.csproj", "{6A50B0D6-0431-43D7-854E-8756AEC8E012}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

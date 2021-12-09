@@ -10,7 +10,6 @@ namespace BullsCowsTest
 {
     internal class BullsAndCowsTests
     {
-        MockUI ui = null;
         MockIO GameIO = null;
         IGame game = null;
 
@@ -19,43 +18,46 @@ namespace BullsCowsTest
         {
             GameIO = new MockIO();
             game = new BullsAndCowsGame(GameIO);
-            ui = new MockUI();
-            game.SetupGame("Robin");
+            game.SetPlayerName("Robin");
+            game.SetupGame();
         }
 
         [Test] 
         public void Partial_Correct_Order_Returns_Bulls_And_Cows()
         {
             string answer = game.GetAnswer();
-            char last = answer[3];
-            char first = answer[0];
+            char first = answer.First();
+            char last = answer.Last();
 
             StringBuilder sb = new(answer);
-            sb[3] = first;
+            sb[answer.Length - 1] = first;
             sb[0] = last;
 
             string guess = sb.ToString();
-            game.ValidateInput(guess);
-            Assert.That(game.CheckAnswer(), Is.EqualTo("BB,CC"));
+            game.MakeGuess(guess);
+            Assert.That(game.GetProgress(), Is.EqualTo("BB,CC"));
         }
 
         public void Correct_Answer_Returns_Bulls()
         {
             string answer = game.GetAnswer();
-            game.ValidateInput(answer);
-            Assert.That(game.CheckAnswer(), Is.EqualTo("BBBB,"));
+            game.MakeGuess(answer);
+            Assert.That(game.GetProgress(), Is.EqualTo("BBBB,"));
             Assert.That(game.GameFinished, Is.True);
         }
 
         [Test]
-        public void Correct_Digits_Wrong_Order_Returns_Cows()
+        public void Correct_Digits_But_Wrong_Order_Returns_Cows()
         {
             var reversed = game.GetAnswer().Reverse();
 
             string guess = string.Join("", reversed);
 
-            game.ValidateInput(guess);
-            Assert.That(game.CheckAnswer(), Is.EqualTo(",CCCC"));
+            game.MakeGuess(guess);
+
+            string progress = game.GetProgress();
+
+            Assert.That(progress, Is.EqualTo(",CCCC"));
         }
     }
 }

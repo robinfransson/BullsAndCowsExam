@@ -11,13 +11,14 @@ namespace GameEngine
         string GameName { get; }
         int Turns { get; }
         bool GameFinished { get; }
+        void SetPlayerName(string name);
         string GetAnswer();
-        string GetPlayerName();
-        string CheckAnswer();
-        void SetupGame(string playerName);
-        bool ValidateInput(string input);
-        string OnFinish();
-        void ResetGame();
+        string GetProgress();
+        void SetupGame();
+        void MakeGuess(string input);
+        IEnumerable<PlayerData> GetHiscores();
+        void Reset();
+        void SaveScore();
 
     }
 }

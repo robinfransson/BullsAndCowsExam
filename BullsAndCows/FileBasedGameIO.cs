@@ -24,41 +24,36 @@ namespace GameEngine
         private void MakeSureFileExist()
         {
             if (!File.Exists(_dataFile))
+            {
                 File.Create(_dataFile)
                     .Close();
-        }
-        static int Guesses(string line)
-        {
-            string guesses = line.Split("#&#")[1];
-            if (int.TryParse(guesses, out int result))
-            {
-                return result;
             }
-            return 0;
         }
 
-        static string PlayerName(string line) => line.Split("#&#")[0];
+
 
         public List<PlayerData> GetPlayerData()
         {
-            List<PlayerData> result = new List<PlayerData>();
+            List<PlayerData> players = new();
 
-            var fileContents = File.ReadAllLines(_dataFile)
-                                   .Where(line => !string.IsNullOrWhiteSpace(line))
-                                   .GroupBy(PlayerName);
+            var fileContents = File.ReadAllLines(_dataFile);
+
+            var groupedByName = fileContents.Where(line => !string.IsNullOrWhiteSpace(line))
+                                            .GroupBy(GetPlayerName);
 
 
-            foreach(var group in fileContents)
+            foreach(var group in groupedByName)
             {
                 string name = group.Key;
                 int gamesPlayed = group.Count();
-                int totalGuesses = group.Sum(x => Guesses(x));
+                int totalGuesses = group.Sum(x => GetGuesses(x));
+
                 var player = new PlayerData(group.Key, gamesPlayed, totalGuesses);
 
-                result.Add(player);
+                players.Add(player);
             }
 
-            return result;
+            return players;
 
 
         }
@@ -69,6 +64,22 @@ namespace GameEngine
             var playerData = $"{name}#&#{guesses}";
             File.AppendAllText(_dataFile, playerData + Environment.NewLine);
         }
+
+
+        private string GetPlayerName(string line) => line.Split("#&#")[0];
+
+        private int GetGuesses(string line)
+        {
+            string guesses = line.Split("#&#")[1];
+
+            if (int.TryParse(guesses, out int result))
+            {
+                return result;
+            }
+
+            return 0;
+        }
+
 
     }
 }

@@ -18,14 +18,18 @@ namespace BullsCowsTest.Mocks
             return cont;
         }
 
-        public string GetString()
+        public string GetInput()
         {
             return get;
         }
 
-        public void PutString(string s)
+        public void Output(string s)
         {
             put = s;
+        }
+
+        public void ShowHiscores(IEnumerable<PlayerData> hiscores)
+        {
         }
     }
 }

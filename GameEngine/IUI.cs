@@ -8,8 +8,10 @@ namespace GameEngine
 {
     public interface IUI
     {
-        void PutString(string s);
-        string GetString();
+        void Output(string s);
+        string GetInput();
         bool Continue();
+        void ShowHiscores(IEnumerable<PlayerData> hiscores);
+        void Clear();
     }
 }

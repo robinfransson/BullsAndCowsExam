@@ -6,43 +6,86 @@ using System.Text;
 
 namespace BullsAndCows
 {
-    public class BullsAndCowsGame : GameBase, IGame
+    public class BullsAndCowsGame : IGame
     {
         public string GameName => "Bulls and cows";
         public int Turns => GuessesMade;
         public string GetAnswer() => Answer;
         public bool GameFinished => Answer == Guess;
 
-        public BullsAndCowsGame(IGameIO gameIO) : base(gameIO)
-        {
 
-        }
-
+        private readonly IGameIO IO;
+        private string PlayerName { get; set; }
         private string Answer { get; set; }
         private string Guess { get; set; }
-        private int GuessesMade { get; set; } = 0;
+        private int GuessesMade { get; set; }
 
 
 
-        public bool ValidateInput(string input)
+
+        public BullsAndCowsGame(IGameIO gameIO)
         {
-            bool validInput = input.All(ch => char.IsDigit(ch)) && !string.IsNullOrWhiteSpace(input);
+            IO = gameIO;
+        }
 
-            if (!validInput)
-                return false;
 
+
+
+        public void SetPlayerName(string name)
+        {
+            PlayerName = name;
+        }
+
+        public void MakeGuess(string input)
+        {
             GuessesMade++;
             Guess = input;
-            return true;
         }
 
-        public void SetupGame(string playerName)
+        public void SetupGame()
         {
-            base.Setup(playerName);
-            GenerateAnswer();
+            SetAnswer();
         }
 
-        private void GenerateAnswer()
+
+        public string GetProgress()
+        {
+            if (!GameFinished)
+            {
+                return CheckBullsCows();
+            }
+
+            return "BBBB,";
+
+        }
+
+       
+        public IEnumerable<PlayerData> GetHiscores()
+        {
+
+            var players = IO.GetPlayerData();
+            return players.OrderBy(player => player.AverageGuesses);
+        }
+
+
+
+        public void Reset()
+        {
+            GuessesMade = 0;
+            Guess = null;
+            SetAnswer();
+        }
+
+
+
+        public void SaveScore()
+        {
+            IO.SavePlayerData(PlayerName, GuessesMade);
+        }
+
+
+
+        private void SetAnswer()
         {
             List<int> digits = new();
             Random rand = new();
@@ -62,58 +105,29 @@ namespace BullsAndCows
 
 
 
-        public string CheckAnswer()
-        {
-            if (!GameFinished)
-            {
-                return CheckBullsCows();
-                
-
-            }
-            return "BBBB,";
-
-        }
-
         private string CheckBullsCows()
         {
             string bulls = "";
             string cows = "";
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < Answer.Length; i++)
             {
                 for (int j = 0; j < Guess.Length; j++)
                 {
                     bool samePositions = i == j;
                     bool sameDigits = Answer[i] == Guess[j];
 
-
-
                     if (samePositions && sameDigits)
-                            bulls += "B";
-
-                    else if(sameDigits)
+                    {
+                        bulls += "B";
+                    }
+                    else if (sameDigits)
+                    {
                         cows += "C";
-                    
+                    }
                 }
             }
             return string.Format("{0},{1}", bulls, cows);
         }
 
-        public string GetPlayerName()
-        {
-            return CurrentPlayer.Name;
-        }
-
-        public string OnFinish()
-        {
-            SaveHiscores(GuessesMade);
-            return GetTopList();
-        }
-
-        public void ResetGame()
-        {
-            GuessesMade = 0;
-            Guess = null;
-            GenerateAnswer();
-        }
     }
 }
