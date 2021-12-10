@@ -89,14 +89,17 @@ namespace BullsCowsTest
         public void Game_Is_Resetable()
         {
             string answerBeforeReset = _game.GetAnswer();
-
             _game.MakeGuess(answerBeforeReset);
             string progressBeforeReset = _game.GetProgress();
-
+            
+            
+            
             _game.Reset();
             string answer = _game.GetAnswer();
             string progress = _game.GetProgress();
 
+            
+            
             Assert.That(answerBeforeReset, Is.Not.EqualTo(answer));
             Assert.That(progressBeforeReset, Is.Not.EqualTo(progress));
             Assert.That(_game.Turns, Is.Zero);
@@ -190,7 +193,7 @@ namespace BullsCowsTest
 
 
             _fakeGame.Setup(game => game.GetPlayers())
-                     .Returns(() => _gameIO.GetPlayerData());
+                     .Returns(_gameIO.GetPlayerData());
 
             _fakeGame.Setup(game => game.GameFinished)
                      .Returns(true);
