@@ -1,12 +1,13 @@
 ﻿using BullsAndCows;
+using BullsAndCows.IO;
 using GameEngine;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
+using UnitTests;
 
 namespace BullsCowsTest
 {
@@ -32,8 +33,8 @@ namespace BullsCowsTest
             _game = new BullsAndCowsGame(_gameIO);
             _controller = new GameController(_game, _fakeUI.Object);
 
-            _game.SetPlayerName("Robin");
             _game.SetupGame();
+
         }
 
 
@@ -41,7 +42,10 @@ namespace BullsCowsTest
         [Test]
         public void Partial_Correct_Order_Returns_Bulls_And_Cows()
         {
-            string guess = LastAndFirstCharactersWrong();
+            string answer = _game.GetAnswer();
+            string guess = SwitchPlaceLastAndFirstCharacter(answer);
+
+
             _game.MakeGuess(guess);
             string progress = _game.GetProgress();
 
@@ -56,10 +60,10 @@ namespace BullsCowsTest
         [Test]
         public void Correct_Digits_But_Wrong_Order_Returns_Cows()
         {
-            var reversed = _game.GetAnswer()
-                                .Reverse();
+            IEnumerable<char> answerReversed = _game.GetAnswer()
+                                                    .Reverse();
+            string guess = string.Join("", answerReversed);
 
-            string guess = string.Join("", reversed);
 
             _game.MakeGuess(guess);
 
@@ -74,7 +78,7 @@ namespace BullsCowsTest
         [Test]
         public void Game_Is_Completed_When_Answer_Is_Correct()
         {
-            var answer = _game.GetAnswer();
+            string answer = _game.GetAnswer();
             _game.MakeGuess(answer);
 
 
@@ -84,7 +88,7 @@ namespace BullsCowsTest
         [Test]
         public void Game_Is_Resetable()
         {
-            var answerBeforeReset = _game.GetAnswer();
+            string answerBeforeReset = _game.GetAnswer();
 
             _game.MakeGuess(answerBeforeReset);
             string progressBeforeReset = _game.GetProgress();
@@ -103,127 +107,54 @@ namespace BullsCowsTest
 
 
 
-        [Test]
-        public void Save_Data_To_File()
-        {
-            string result = "";
 
-            _fakeIOWrapper.Setup(io => io.AppendAllText(It.IsAny<string>(), It.IsAny<string>()))
-                          .Callback<string, string>((_, text) =>
-                          {
-                              result = text.Trim();
-                          });
-
-
-            string answer = _game.GetAnswer();
-            _game.MakeGuess(answer);
-            _game.SaveScore();
-
-            Assert.That(result, Is.EqualTo("Robin#&#1"));
-
-        }
-
-
-        [Test]
-        public void Load_Players_From_File()
-        {
-
-
-            _fakeIOWrapper.Setup(io => io.ReadAllLines(It.IsAny<string>()))
-                          .Returns(FakeTextFile().ToArray());
-
-
-            var players = _game.GetPlayers();
-
-
-            Assert.That(players, Has.Count.EqualTo(3));
-
-        }
-
-
-
-
-        [Test]
-        public void Loaded_Player_Has_Correct_Total_Guesses()
-        {
-            _fakeIOWrapper.Setup(io => io.ReadAllLines(It.IsAny<string>()))
-                          .Returns(FakeTextFile().ToArray());
-
-
-            var players = _game.GetPlayers();
-            var totalGuesses = players.First(player => player.Name == "Robin").TotalGuesses;
-
-            Assert.That(totalGuesses, Is.EqualTo(8));
-
-        }
-
-
-        [Test]
-        public void Loaded_Player_Has_Correct_Games_Played()
-        {
-            _fakeIOWrapper.Setup(io => io.ReadAllLines(It.IsAny<string>()))
-                          .Returns(FakeTextFile().ToArray());
-
-
-            var players = _game.GetPlayers();
-            var totalGuesses = players.First(player => player.Name == "Robin").GamesPlayed;
-
-            Assert.That(totalGuesses, Is.EqualTo(4));
-
-        }
-
-        private List<string> FakeTextFile()
-        {
-            return new()
-            {
-                "Robin#&#2",
-                "Robin#&#2",
-                "Robin#&#2",
-                "Robin#&#2",
-                "RF#&#1",
-                "RF#&#1",
-                "RF#&#1",
-                "RF2#&#10",
-                "RF2#&#20",
-                "RF2#&#15",
-                "RF2#&#15",
-            };
-        }
-
-        private GameController CreateController(IGame game, IGameUI ui) => new(game, ui);
 
         [Test]
         public void Player_With_Lowest_Average_Is_Leader()
         {
-            PlayerData expected = new("RF", 3, 3);
-            PlayerData leader = null;
+            
+            Player leader = null;
             IGameUI ui = _fakeUI.Object;
             
-            _fakeUI.Setup(ui => ui.GetInput()).Returns("");
-            _fakeUI.Setup(ui => ui.Continue()).Returns(false);
-
-            _fakeUI.Setup(ui => ui.ShowHiscores(It.IsAny<IEnumerable<PlayerData>>()))
-                   .Callback<IEnumerable<PlayerData>>((players) => leader = players.First());
-
-            _fakeIOWrapper.Setup(io => io.ReadAllLines(It.IsAny<string>()))
-                          .Returns(FakeTextFile().ToArray());
-
-            _fakeGame.Setup(game => game.GetPlayers()).Returns(() => _gameIO.GetPlayerData());
-            _fakeGame.Setup(game => game.GameFinished).Returns(true);
-
-            var controller = CreateController(_fakeGame.Object, _fakeUI.Object);
-
-            controller.Run();
 
 
+            _fakeUI.Setup(ui => ui.GetInput())
+                   .Returns("");
+
+            _fakeUI.Setup(ui => ui.Continue())
+                   .Returns(false);
+
+            _fakeUI.Setup(ui => ui.ShowHiscores(It.IsAny<IEnumerable<Player>>()))
+                   .Callback<IEnumerable<Player>>((players) => leader = players.First());
+
+            
+            _fakeIOWrapper.Setup(wrapper => wrapper.ReadFile(It.IsAny<string>()))
+                          .Returns(FakeData.TextFile);
+
+            
+            
+            _fakeGame.Setup(game => game.GetPlayers())
+                     .Returns(() => _gameIO.GetPlayerData());
+
+            _fakeGame.Setup(game => game.GameFinished)
+                     .Returns(true);
+
+            
+            
+            
+            var controller = new GameController(_fakeGame.Object, _fakeUI.Object);
+            controller.Start();
+
+
+
+            Player expected = new(name: "RF", gamesPlayed: 3, guesses: 3);
             Assert.That(leader, Is.EqualTo(expected));
 
         }
 
 
-        private string LastAndFirstCharactersWrong()
+        private string SwitchPlaceLastAndFirstCharacter(string answer)
         {
-            string answer = _game.GetAnswer();
             StringBuilder guessBuilder = new(answer);
 
             char first = answer.First();
@@ -236,6 +167,45 @@ namespace BullsCowsTest
 
         }
 
+
+        [Test]
+        public void Hiscores__Only_Loaded_When_Game_Finished()
+        {
+            IGameUI ui = _fakeUI.Object;
+
+
+
+            _fakeUI.Setup(ui => ui.GetInput())
+                   .Returns("");
+
+            _fakeUI.Setup(ui => ui.Continue())
+                   .Returns(false);
+
+            _fakeUI.Setup(ui => ui.ShowHiscores(It.IsAny<IEnumerable<Player>>()));
+
+
+            _fakeIOWrapper.Setup(wrapper => wrapper.ReadFile(It.IsAny<string>()))
+                          .Returns(FakeData.TextFile);
+
+
+
+            _fakeGame.Setup(game => game.GetPlayers())
+                     .Returns(() => _gameIO.GetPlayerData());
+
+            _fakeGame.Setup(game => game.GameFinished)
+                     .Returns(true);
+
+
+
+
+            var controller = new GameController(_fakeGame.Object, _fakeUI.Object);
+            controller.Start();
+
+
+            _fakeUI.Verify(ui => ui.ShowHiscores(It.IsAny<IEnumerable<Player>>()), Times.Once());
+            _fakeIOWrapper.Verify(wrapper => wrapper.ReadFile(It.IsAny<string>()), Times.Once());
+
+        }
 
 
     }

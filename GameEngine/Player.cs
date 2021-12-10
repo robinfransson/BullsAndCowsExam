@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    public class PlayerData
+    public class Player
     {
         public string Name { get; private set; }
         public int TotalGuesses { get; private set; }
@@ -17,27 +17,33 @@ namespace GameEngine
 
 
 
-        public PlayerData(string name, int gamesPlayed, int totalGuesses)
+
+        public Player(string name, int gamesPlayed, int guesses)
         {
             Name = name;
+            TotalGuesses = guesses;
             GamesPlayed = gamesPlayed;
-            TotalGuesses = totalGuesses;
         }
 
+        
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as PlayerData);
+            return Equals(obj as Player);
 
         }
 
-        private bool Equals(PlayerData other)
+
+
+        private bool Equals(Player other)
         {
             return other != null &&
                    other.TotalGuesses == this.TotalGuesses &&
                    other.GamesPlayed == this.GamesPlayed &&
                    other.Name == this.Name;
         }
+
+
 
 
         public override int GetHashCode()

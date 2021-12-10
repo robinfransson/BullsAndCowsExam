@@ -8,7 +8,6 @@ namespace BullsAndCows
 {
     public class BullsAndCowsGame : IGame
     {
-        public string GameName => "Bulls and cows";
         public int Turns => GuessesMade;
         public string GetAnswer() => Answer;
         public bool GameFinished => Answer == Guess;
@@ -64,7 +63,7 @@ namespace BullsAndCows
 
 
        
-        public List<PlayerData> GetPlayers()
+        public List<Player> GetPlayers()
         {
 
             return IO.GetPlayerData();
@@ -95,6 +94,7 @@ namespace BullsAndCows
             List<int> selectedNumbers = new();
             Random rand = new();
 
+
             while (selectedNumbers.Count < 4)
             {
                 int index = rand.Next(digits.Count);
@@ -102,10 +102,11 @@ namespace BullsAndCows
 
                 
                 selectedNumbers.Add(selectedNumber);
-                digits.RemoveAt(index);
+                digits.Remove(selectedNumber);
 
 
             }
+
             Answer = string.Join("", selectedNumbers);
         }
 
@@ -113,8 +114,11 @@ namespace BullsAndCows
 
         private string CheckBullsCows()
         {
-            string bulls = "";
-            string cows = "";
+            var bulls = new StringBuilder();
+            var cows = new StringBuilder();
+
+
+
             for (int i = 0; i < Answer.Length; i++)
             {
                 for (int j = 0; j < Guess?.Length; j++)
@@ -124,15 +128,15 @@ namespace BullsAndCows
 
                     if (samePositions && sameDigits)
                     {
-                        bulls += "B";
+                        bulls.Append('B');
                     }
                     else if (sameDigits)
                     {
-                        cows += "C";
+                        cows.Append('C');
                     }
                 }
             }
-            return string.Format("{0},{1}", bulls, cows);
+            return string.Format("{0},{1}", bulls.ToString(), cows.ToString());
         }
 
     }

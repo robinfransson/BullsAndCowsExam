@@ -11,7 +11,7 @@ namespace GameEngine
         void Output(string s);
         string GetInput();
         bool Continue();
-        void ShowHiscores(IEnumerable<PlayerData> hiscores);
+        void ShowHiscores(IEnumerable<Player> hiscores);
         void Clear();
     }
 }

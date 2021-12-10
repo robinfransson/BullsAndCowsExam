@@ -8,7 +8,6 @@ namespace GameEngine
 {
     public interface IGame
     {
-        string GameName { get; }
         int Turns { get; }
         bool GameFinished { get; }
         void SetPlayerName(string name);
@@ -16,7 +15,7 @@ namespace GameEngine
         string GetProgress();
         void SetupGame();
         void MakeGuess(string input);
-        List<PlayerData> GetPlayers();
+        List<Player> GetPlayers();
         void Reset();
         void SaveScore();
 

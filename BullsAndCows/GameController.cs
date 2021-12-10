@@ -1,6 +1,4 @@
 ﻿using GameEngine;
-using System;
-using System.ComponentModel;
 using System.Linq;
 
 namespace BullsAndCows
@@ -15,7 +13,7 @@ namespace BullsAndCows
             _ui = ui;
         }
 
-        public void Run()
+        public void Start()
         {
             _ui.Output("Enter your user name:");
 
@@ -31,13 +29,15 @@ namespace BullsAndCows
             while (Playing());
         }
 
+
+
         private void PlayGame()
         {
             while (!_game.GameFinished)
             {
                 _ui.Output("Enter a guess: ");
-                string input = _ui.GetInput();
-                _game.MakeGuess(input);
+                string guess = _ui.GetInput();
+                _game.MakeGuess(guess);
                 string progress = _game.GetProgress();
                 _ui.Output(progress);
             }

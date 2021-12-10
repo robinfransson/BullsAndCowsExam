@@ -5,11 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BullsAndCows", "BullsAndCows\BullsAndCows.csproj", "{F1A5239A-DFD9-4430-8FF0-FF25E90C1204}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{D7524046-A0EA-4393-B7A0-D85219AB7CCA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameEngine", "GameEngine\GameEngine.csproj", "{2E43A269-4803-4C91-8267-9BAF4EE904FD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UlfsEgenRefaktorisering", "UlfsEgenRefaktorisering\UlfsEgenRefaktorisering.csproj", "{4DE2C259-A9A6-43D1-9F6C-B8A53BCA2611}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "BullsCowsTest\UnitTests.csproj", "{6A50B0D6-0431-43D7-854E-8756AEC8E012}"
 EndProject
@@ -23,18 +19,10 @@ Global
 		{F1A5239A-DFD9-4430-8FF0-FF25E90C1204}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1A5239A-DFD9-4430-8FF0-FF25E90C1204}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1A5239A-DFD9-4430-8FF0-FF25E90C1204}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7524046-A0EA-4393-B7A0-D85219AB7CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7524046-A0EA-4393-B7A0-D85219AB7CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7524046-A0EA-4393-B7A0-D85219AB7CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7524046-A0EA-4393-B7A0-D85219AB7CCA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E43A269-4803-4C91-8267-9BAF4EE904FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E43A269-4803-4C91-8267-9BAF4EE904FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E43A269-4803-4C91-8267-9BAF4EE904FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E43A269-4803-4C91-8267-9BAF4EE904FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DE2C259-A9A6-43D1-9F6C-B8A53BCA2611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DE2C259-A9A6-43D1-9F6C-B8A53BCA2611}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DE2C259-A9A6-43D1-9F6C-B8A53BCA2611}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DE2C259-A9A6-43D1-9F6C-B8A53BCA2611}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A50B0D6-0431-43D7-854E-8756AEC8E012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A50B0D6-0431-43D7-854E-8756AEC8E012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A50B0D6-0431-43D7-854E-8756AEC8E012}.Release|Any CPU.ActiveCfg = Release|Any CPU

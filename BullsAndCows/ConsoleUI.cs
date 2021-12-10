@@ -22,7 +22,7 @@ namespace BullsAndCows
         {
             Console.WriteLine("Press Y to play again or any other key to return to exit.");
 
-            var key = Console.ReadKey(true).Key;
+            ConsoleKey key = Console.ReadKey(true).Key;
             return key == ConsoleKey.Y;
         }
 
@@ -38,7 +38,7 @@ namespace BullsAndCows
 
 
 
-        public void ShowHiscores(IEnumerable<PlayerData> hiscores)
+        public void ShowHiscores(IEnumerable<Player> hiscores)
         {
             
             string scoreboard = GenerateScoreboard(hiscores);
@@ -47,27 +47,27 @@ namespace BullsAndCows
 
 
 
-        private string GenerateScoreboard(IEnumerable<PlayerData> hiscores)
+        private string GenerateScoreboard(IEnumerable<Player> hiscores)
         {
             int longestNameLength = hiscores.Max(player => player.Name.Length);
 
             string format = "{0,-" + longestNameLength + "} {1,5} {2,7}";
 
 
-            var scoreBuilder = new StringBuilder();
+            var builder = new StringBuilder();
 
-            scoreBuilder.AppendLine("Current leaderboard:");
-            scoreBuilder.AppendLine(string.Format(format, "Name", "Games", "Average"));
+            builder.AppendLine("Current leaderboard:");
+            builder.AppendLine(string.Format(format, "Name", "Games", "Average"));
 
 
 
             foreach (var player in hiscores)
             {
-                scoreBuilder.AppendLine(string.Format(format, player.Name, player.GamesPlayed, player.AverageGuesses));
+                builder.AppendLine(string.Format(format, player.Name, player.GamesPlayed, player.AverageGuesses));
             }
 
 
-            return scoreBuilder.ToString();
+            return builder.ToString();
         }
 
 

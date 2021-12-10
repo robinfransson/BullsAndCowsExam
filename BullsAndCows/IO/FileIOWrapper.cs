@@ -2,31 +2,28 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BullsAndCows
+namespace BullsAndCows.IO
 {
     public class FileIOWrapper : IFileIOWrapper
     {
-        public void AppendAllText(string dataFile, string text)
+        public void AppendToFile(string dataFile, string text)
         {
             File.AppendAllText(dataFile, text);
         }
 
-        public void Create(string dataFile)
+        public void CreateFile(string dataFile)
         {
             File.Create(dataFile)
                 .Close();
         }
 
-        public bool Exists(string dataFile)
+        public bool FileExists(string dataFile)
         {
             return File.Exists(dataFile);
         }
 
-        public string[] ReadAllLines(string dataFile)
+        public string[] ReadFile(string dataFile)
         {
             return File.ReadAllLines(dataFile);
         }

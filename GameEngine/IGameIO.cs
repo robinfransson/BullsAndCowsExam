@@ -8,7 +8,7 @@ namespace GameEngine
 {
     public interface IGameIO
     {
-        List<PlayerData> GetPlayerData();
+        List<Player> GetPlayerData();
         void SavePlayerData(string name, int guesses);
     }
 }
