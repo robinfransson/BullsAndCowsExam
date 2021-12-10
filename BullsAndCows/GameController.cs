@@ -1,5 +1,7 @@
 ﻿using GameEngine;
+using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace BullsAndCows
 {
@@ -42,8 +44,14 @@ namespace BullsAndCows
 
             _ui.Output($"Completed the game in {_game.Turns} turns!");
             _game.SaveScore();
+            ShowHiscores();
+        }
 
-            var scores = _game.GetPlayers();
+        private void ShowHiscores()
+        {
+            var scores = _game.GetPlayers()
+                              .OrderBy(x => x.AverageGuesses);
+
             _ui.ShowHiscores(scores);
         }
 

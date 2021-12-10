@@ -61,7 +61,7 @@ namespace BullsAndCows
 
 
 
-            foreach (var player in hiscores.OrderBy(player => player.AverageGuesses))
+            foreach (var player in hiscores)
             {
                 scoreBuilder.AppendLine(string.Format(format, player.Name, player.GamesPlayed, player.AverageGuesses));
             }
