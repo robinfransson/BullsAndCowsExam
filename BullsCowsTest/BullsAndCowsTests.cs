@@ -66,9 +66,8 @@ namespace BullsCowsTest
 
 
             _game.MakeGuess(guess);
-
-
             string progress = _game.GetProgress();
+            
             Assert.That(progress, Is.EqualTo(",CCCC"));
         }
 
@@ -79,6 +78,8 @@ namespace BullsCowsTest
         public void Game_Is_Completed_When_Answer_Is_Correct()
         {
             string answer = _game.GetAnswer();
+
+
             _game.MakeGuess(answer);
 
 
@@ -113,14 +114,12 @@ namespace BullsCowsTest
 
 
         [Test]
-        public void Player_With_Lowest_Average_Is_Leader()
+        public void Controller_Orders_Players_By_Average_Guesses()
         {
             
             Player leader = null;
             IGameUI ui = _fakeUI.Object;
             
-
-
             _fakeUI.Setup(ui => ui.GetInput())
                    .Returns("");
 
@@ -172,7 +171,7 @@ namespace BullsCowsTest
 
 
         [Test]
-        public void Hiscores__Only_Loaded_When_Game_Finished()
+        public void Hiscores_Only_Loaded_When_Game_Finished()
         {
             IGameUI ui = _fakeUI.Object;
 
