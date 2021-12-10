@@ -17,7 +17,7 @@ namespace BullsCowsTest
         private GameController _controller;
         private Mock<IFileIOWrapper> _fakeIOWrapper;
         private Mock<IGameUI> _fakeUI;
-        
+
 
         [SetUp]
         public void Setup()
@@ -34,7 +34,7 @@ namespace BullsCowsTest
 
 
 
-        [Test] 
+        [Test]
         public void Partial_Correct_Order_Returns_Bulls_And_Cows()
         {
             string guess = LastAndFirstCharactersWrong();
@@ -59,12 +59,12 @@ namespace BullsCowsTest
 
             _game.MakeGuess(guess);
 
-            string progress = _game.GetProgress();
 
+            string progress = _game.GetProgress();
             Assert.That(progress, Is.EqualTo(",CCCC"));
         }
 
-        
+
 
 
         [Test]
@@ -118,7 +118,7 @@ namespace BullsCowsTest
             _game.MakeGuess(answer);
             _game.SaveScore();
 
-            string actual = result.Trim(); 
+            string actual = result.Trim();
 
             Assert.That(actual, Is.EqualTo("Robin#&#1"));
 
@@ -140,6 +140,9 @@ namespace BullsCowsTest
             Assert.That(players, Has.Count.EqualTo(2));
 
         }
+
+
+
 
         [Test]
         public void Loaded_Player_Has_Correct_Total_Guesses()
@@ -185,30 +188,35 @@ namespace BullsCowsTest
         }
 
 
-
         [Test]
         public void Player_With_Lowest_Average_Is_Leader()
         {
-            ConsoleUI ui = new ConsoleUI();
+            string output = "";
+            IGameUI ui = _fakeUI.Object;
 
+
+            _fakeUI.Setup(ui => ui.Output(It.IsAny<string>())).Callback<string>((line) => output += line);
+            _fakeUI.Setup(ui => ui.ShowHiscores(It.IsAny<IEnumerable<PlayerData>>()))
+                   .Callback<IEnumerable<PlayerData>>((players) =>
+                   {
+                       var s = players.Select(pl => pl.Name);
+                       foreach (var name in s)
+                           ui.Output(name + Environment.NewLine);
+                   }
+            );
 
             _fakeIOWrapper.Setup(io => io.ReadAllLines(It.IsAny<string>()))
-                             .Returns(MockTextFile().ToArray());
+                          .Returns(MockTextFile().ToArray());
+
 
             var players = _game.GetPlayers();
+            ui.ShowHiscores(players);
+            string[] linesPrinted = output.Split(Environment.NewLine);
 
-            using (StringWriter sw = new StringWriter())
-            {
-                Console.SetOut(sw);
-                ui.ShowHiscores(players);
-                string[] linesPrinted = sw.ToString().Split(Environment.NewLine);
-
-                bool actual = linesPrinted[2].StartsWith("RF");
+            bool actual = linesPrinted[0].StartsWith("RF");
 
 
-                Assert.That(actual, Is.True);
-
-            }
+            Assert.That(actual, Is.True);
 
         }
 

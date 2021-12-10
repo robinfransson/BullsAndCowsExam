@@ -18,7 +18,6 @@ namespace GameEngine
         {
             _dataFile = dataFile;
             _ioWrapper = wrapper;
-            MakeSureFileExist();
 
         }
 
@@ -47,7 +46,7 @@ namespace GameEngine
             {
                 string name = playerData.Key;
                 int gamesPlayed = playerData.Count();
-                int totalGuesses = playerData.Sum(x => Guesses(x));
+                int totalGuesses = playerData.Sum(Guesses);
 
                 var player = new PlayerData(name, gamesPlayed, totalGuesses);
 
@@ -63,6 +62,9 @@ namespace GameEngine
         public void SavePlayerData(string name, int guesses)
         {
             var data = $"{name}#&#{guesses}";
+
+
+            MakeSureFileExist();
 
             _ioWrapper.AppendAllText(_dataFile, data + Environment.NewLine);
         }

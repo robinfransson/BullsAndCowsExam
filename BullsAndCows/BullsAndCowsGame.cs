@@ -67,7 +67,9 @@ namespace BullsAndCows
         public List<PlayerData> GetPlayers()
         {
 
-            return IO.GetPlayerData();
+            return IO.GetPlayerData()
+                     .OrderBy(player => player.AverageGuesses)
+                     .ToList();
         }
 
 
