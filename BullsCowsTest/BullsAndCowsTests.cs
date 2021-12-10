@@ -220,49 +220,6 @@ namespace BullsCowsTest
 
         }
 
-        [Test]
-        public void Can_Play_One_Round()
-        {
-            var fakeFileContents = FakeTextFile();
-            string answer = "1234";
-            string guess = "";
-            string playerName = "";
-            string output = "";
-
-
-            _fakeGame.Setup(game => game.SetPlayerName(It.IsAny<string>()))
-                     .Callback<string>((name) => playerName = name);
-
-
-            _fakeGame.Setup(game => game.MakeGuess(It.IsAny<string>()))
-                     .Callback<string>((input) => guess = input);
-            
-            
-            _fakeGame.Setup(game => game.GetAnswer())
-                     .Returns(answer);
-            
-            
-            _fakeGame.Setup(game => game.GameFinished)
-                     .Returns(() => guess == "1234");
-            
-            
-            _fakeGame.Setup(game => game.SetPlayerName(It.IsAny<string>()))
-                     .Callback<string>((name) => playerName = name);
-
-            
-            _fakeGame.Setup(game => game.GetProgress())
-                     .Returns("");
-            
-            _fakeGame.Setup(game => game.GetPlayers())
-                     .Returns(_game.GetPlayers());
-
-            _fakeUI.Setup(ui => ui.Output(It.IsAny<string>())).Callback<string>((line) => output += line);
-
-            _fakeUI.Setup(ui => ui.ShowHiscores(It.IsAny<IEnumerable<PlayerData>>()));
-
-
-        }
-
 
         private string LastAndFirstCharactersWrong()
         {
