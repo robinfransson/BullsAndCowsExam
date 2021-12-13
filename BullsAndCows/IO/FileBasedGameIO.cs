@@ -7,12 +7,12 @@ namespace BullsAndCows.IO
 {
     public class FileBasedGameIO : IGameIO
     {
-        private readonly string _dataFile;
+        private readonly string _saveFile;
         private readonly IFileIOWrapper _wrapper;
 
-        public FileBasedGameIO(string dataFile, IFileIOWrapper wrapper)
+        public FileBasedGameIO(string saveFile, IFileIOWrapper wrapper)
         {
-            _dataFile = dataFile;
+            _saveFile = saveFile;
             _wrapper = wrapper;
 
         }
@@ -20,11 +20,11 @@ namespace BullsAndCows.IO
 
 
 
-        public List<Player> GetPlayerData()
+        public List<Player> LoadPlayerData()
         {
             List<Player> players = new();
 
-            var groupedByUsername = _wrapper.ReadFile(_dataFile)
+            var groupedByUsername = _wrapper.ReadFile(_saveFile)
                                             .Where(line => !string.IsNullOrWhiteSpace(line))
                                             .GroupBy(UsernameFromFile);
 
@@ -54,14 +54,14 @@ namespace BullsAndCows.IO
 
             MakeSureFileExists();
 
-            _wrapper.AppendToFile(_dataFile, data + Environment.NewLine);
+            _wrapper.AppendToFile(_saveFile, data + Environment.NewLine);
         }
 
         private void MakeSureFileExists()
         {
-            if (!_wrapper.FileExists(_dataFile))
+            if (!_wrapper.FileExists(_saveFile))
             {
-                _wrapper.CreateFile(_dataFile);
+                _wrapper.CreateFile(_saveFile);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using System;
 using System.Linq;
 
 namespace BullsAndCows
@@ -15,11 +16,8 @@ namespace BullsAndCows
 
         public void Start()
         {
-            _ui.Output("Enter your user name:");
-
-            string name = _ui.GetInput();
-            _game.SetPlayerName(name);
-            _game.SetupGame();
+            _ui.Output($"Welcome to {_game.GameName}");
+            SetUsername();
             do
             {
                 _ui.Clear();
@@ -29,7 +27,14 @@ namespace BullsAndCows
             while (Playing());
         }
 
+        private void SetUsername()
+        {
+            _ui.Output("Enter your user name:");
 
+            string name = _ui.GetInput();
+            _game.SetPlayerName(name);
+            _game.SetupGame();
+        }
 
         private void PlayGame()
         {

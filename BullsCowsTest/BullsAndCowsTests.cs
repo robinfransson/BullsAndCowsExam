@@ -7,18 +7,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnitTests;
+using Tests;
 
-namespace BullsCowsTest
+namespace Tests
 {
     internal class BullsAndCowsTests
     {
-        private IGame _game;
+        private static IGame _game;
         private IGameIO _gameIO;
-        private GameController _controller;
         private Mock<IFileIOWrapper> _fakeIOWrapper;
         private Mock<IGameUI> _fakeUI;
         private Mock<IGame> _fakeGame;
+
+
+
+
+
+
+
+
 
 
         [SetUp]
@@ -31,7 +38,6 @@ namespace BullsCowsTest
 
             _gameIO = new FileBasedGameIO("bullsandcows.txt", _fakeIOWrapper.Object);
             _game = new BullsAndCowsGame(_gameIO);
-            _controller = new GameController(_game, _fakeUI.Object);
 
             _game.SetupGame();
 
@@ -39,37 +45,30 @@ namespace BullsCowsTest
 
 
 
+
+
         [Test]
-        public void Partial_Correct_Order_Returns_Bulls_And_Cows()
+        [TestCase("5647", "BBBB,")]
+        [TestCase("5640", "BBB,")]
+        [TestCase("1476", ",CCC")]
+        [TestCase("4765", ",CCCC")]
+        [TestCase("5674", "BB,CC")]
+        [TestCase("5764", "B,CCC")]
+        [TestCase("5555", "B,CCC")]
+        [TestCase("1238", ",")]
+        public void Game_Returns_Bulls_And_Cows_Correctly(string guess, string expected)
         {
-            string answer = _game.GetAnswer();
-            string guess = SwitchPlaceLastAndFirstCharacter(answer);
+            _game = new BullsAndCowsGame(_gameIO, answer: "5647");
 
 
             _game.MakeGuess(guess);
             string progress = _game.GetProgress();
 
 
-            Assert.That(progress, Is.EqualTo("BB,CC"));
+            Assert.That(progress, Is.EqualTo(expected));
         }
 
 
-
-
-
-        [Test]
-        public void Correct_Digits_But_Wrong_Order_Returns_Cows()
-        {
-            IEnumerable<char> answerReversed = _game.GetAnswer()
-                                                    .Reverse();
-            string guess = string.Join("", answerReversed);
-
-
-            _game.MakeGuess(guess);
-            string progress = _game.GetProgress();
-            
-            Assert.That(progress, Is.EqualTo(",CCCC"));
-        }
 
 
 
@@ -85,6 +84,8 @@ namespace BullsCowsTest
 
             Assert.That(_game.GameFinished, Is.True);
         }
+
+
 
         [Test]
         public void Game_Is_Resetable()
@@ -112,9 +113,28 @@ namespace BullsCowsTest
 
 
 
+        public static IEnumerable<TestCaseData> OrderedByAverageGuessesData
+        {
+            get
+            {
+                yield return new TestCaseData(new string[] { "RF#&#1", "RF#&#1", "RF#&#1", "Robin#&#3", "Robin#&#3", "Robin#&#3", "RobinFransson#&#2",
+                                                             "RobinFransson#&#15","RobinFransson#&#20"},
+                                              new Player(name: "RF", gamesPlayed: 3, guesses: 3));
+                yield return new TestCaseData(new string[] { "RF#&#5", "RF#&#5", "RF#&#5", "Robin#&#3", "Robin#&#3", "Robin#&#3", "RobinFransson#&#2",
+                                                             "RobinFransson#&#15","RobinFransson#&#20"},
+                                              new Player(name: "Robin", gamesPlayed: 3, guesses: 9));
+            }
+        }
+
+
+
+
+
+
 
         [Test]
-        public void Controller_Orders_Players_By_Average_Guesses()
+        [TestCaseSource("OrderedByAverageGuessesData")]
+        public void Controller_Orders_Players_By_Average_Guesses(string[] lines, Player expected)
         {
             
             Player leader = null;
@@ -131,12 +151,12 @@ namespace BullsCowsTest
 
             
             _fakeIOWrapper.Setup(wrapper => wrapper.ReadFile(It.IsAny<string>()))
-                          .Returns(FakeData.TextFile);
+                          .Returns(lines);
 
             
             
             _fakeGame.Setup(game => game.GetPlayers())
-                     .Returns(() => _gameIO.GetPlayerData());
+                     .Returns(() => _gameIO.LoadPlayerData());
 
             _fakeGame.Setup(game => game.GameFinished)
                      .Returns(true);
@@ -149,25 +169,11 @@ namespace BullsCowsTest
 
 
 
-            Player expected = new(name: "RF", gamesPlayed: 3, guesses: 3);
+            
             Assert.That(leader, Is.EqualTo(expected));
 
         }
 
-
-        private string SwitchPlaceLastAndFirstCharacter(string answer)
-        {
-            StringBuilder guessBuilder = new(answer);
-
-            char first = answer.First();
-            char last = answer.Last();
-
-            guessBuilder[^1] = first;
-            guessBuilder[0] = last;
-
-            return guessBuilder.ToString();
-
-        }
 
 
         [Test]
@@ -187,12 +193,12 @@ namespace BullsCowsTest
 
 
             _fakeIOWrapper.Setup(wrapper => wrapper.ReadFile(It.IsAny<string>()))
-                          .Returns(FakeData.TextFile);
+                          .Returns(new string[] { "RF#&#1" });
 
 
 
             _fakeGame.Setup(game => game.GetPlayers())
-                     .Returns(_gameIO.GetPlayerData());
+                     .Returns(_gameIO.LoadPlayerData());
 
             _fakeGame.Setup(game => game.GameFinished)
                      .Returns(true);

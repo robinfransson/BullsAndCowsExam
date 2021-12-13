@@ -8,6 +8,7 @@ namespace BullsAndCows
 {
     public class BullsAndCowsGame : IGame
     {
+        public string GameName => "Cows and bulls";
         public int Turns => GuessesMade;
         public string GetAnswer() => Answer;
         public bool GameFinished => Answer == Guess;
@@ -27,6 +28,12 @@ namespace BullsAndCows
             IO = gameIO;
         }
 
+        public BullsAndCowsGame(IGameIO gameIO, string answer)
+        {
+            IO = gameIO;
+            Answer = answer;
+        }
+
 
 
         public void SetPlayerName(string name)
@@ -41,6 +48,9 @@ namespace BullsAndCows
             GuessesMade++;
             Guess = input;
         }
+
+
+
 
         public void SetupGame()
         {
@@ -66,7 +76,7 @@ namespace BullsAndCows
         public List<Player> GetPlayers()
         {
 
-            return IO.GetPlayerData();
+            return IO.LoadPlayerData();
         }
 
 
@@ -90,21 +100,19 @@ namespace BullsAndCows
 
         private void SetAnswer()
         {
-            var digits = Enumerable.Range(0, 10).ToList();
             List<int> selectedNumbers = new();
             Random rand = new();
 
 
             while (selectedNumbers.Count < 4)
             {
-                int index = rand.Next(digits.Count);
-                int selectedNumber = digits[index];
+                int digit = rand.Next(10);
+
+                if (selectedNumbers.Contains(digit))
+                    continue;
 
                 
-                selectedNumbers.Add(selectedNumber);
-                digits.Remove(selectedNumber);
-
-
+                selectedNumbers.Add(digit);
             }
 
             Answer = string.Join("", selectedNumbers);

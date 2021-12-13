@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BullsAndCows", "BullsAndCow
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameEngine", "GameEngine\GameEngine.csproj", "{2E43A269-4803-4C91-8267-9BAF4EE904FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "BullsCowsTest\UnitTests.csproj", "{6A50B0D6-0431-43D7-854E-8756AEC8E012}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "BullsCowsTest\Tests.csproj", "{6A50B0D6-0431-43D7-854E-8756AEC8E012}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
