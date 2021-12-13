@@ -24,9 +24,10 @@ namespace BullsAndCows.IO
         {
             List<Player> players = new();
 
-            var groupedByUsername = _wrapper.ReadFile(_saveFile)
-                                            .Where(line => !string.IsNullOrWhiteSpace(line))
-                                            .GroupBy(UsernameFromFile);
+            string[] fileContents = _wrapper.ReadFile(_saveFile);
+
+            var groupedByUsername = fileContents.Where(line => !string.IsNullOrWhiteSpace(line))
+                                                .GroupBy(UsernameFromFile);
 
                                             
 
@@ -57,6 +58,9 @@ namespace BullsAndCows.IO
             _wrapper.AppendToFile(_saveFile, data + Environment.NewLine);
         }
 
+
+
+
         private void MakeSureFileExists()
         {
             if (!_wrapper.FileExists(_saveFile))
@@ -65,7 +69,11 @@ namespace BullsAndCows.IO
             }
         }
 
+
+
         private string UsernameFromFile(string line) => line.Split("#&#")[0];
+
+
 
         private int GuessesFromFile(string line)
         {

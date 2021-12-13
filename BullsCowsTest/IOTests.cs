@@ -198,6 +198,7 @@ namespace Tests
         [TestCase(new string[] { "Robin#&#", "Robin#&#", "Robin#&#"}, 0)] 
         [TestCase(new string[] { "Robin#&#2", "Robin#&#", "Robin#&#1"}, 3)] 
         [TestCase(new string[] { "RF#&#5", "RF#&#1", "Robin#&#"}, 6)] 
+        [TestCase(new string[] { "RF#&#5", "RF#1", "Robin"}, 5)] 
         public void Line_Without_Guess_Count_Returns_Zero(string[] lines, int expected)
         {
             _fakeIOWrapper.Setup(wrapper => wrapper.ReadFile(It.IsAny<string>())).Returns(lines);
