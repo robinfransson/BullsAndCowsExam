@@ -113,7 +113,7 @@ namespace Tests
         [TestCase(new string[] { "RF#&#1", "Robin#&#2", "RF2#&#1" }, 3)]
         [TestCase(new string[] { "RF#&#1"}, 1)]
         [TestCase(new string[] { "" }, 0)]
-        public void Load_Savefile_Returns_Players(string[] lines, int expected)
+        public void Load_Savefile_Returns_Players_If_File_Is_Populated(string[] lines, int expected)
         {
             _gameIO = new FileBasedGameIO("wordguess.txt", _fakeWrapper.Object);
             _game = new WordGuessingGame(_gameIO);
