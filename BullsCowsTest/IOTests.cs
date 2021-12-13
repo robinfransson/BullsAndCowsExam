@@ -1,13 +1,9 @@
-﻿using BullsAndCows;
-using BullsAndCows.IO;
+﻿using BullsAndCows.IO;
 using GameEngine;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tests
 {
@@ -24,6 +20,10 @@ namespace Tests
         }
 
 
+
+
+
+
         [Test]
         [TestCase("Robin", 5, "Robin#&#5")]
         [TestCase("RF", 1000, "RF#&#1000")]
@@ -36,10 +36,7 @@ namespace Tests
 
 
             _fakeIOWrapper.Setup(io => io.AppendToFile(It.IsAny<string>(), It.IsAny<string>()))
-                          .Callback<string, string>((_, text) =>
-                          {
-                              result = text.Trim();
-                          });
+                          .Callback<string, string>((_, text) => result = text.Trim());
 
 
             _gameIO.SavePlayerData(playerName, guesses);

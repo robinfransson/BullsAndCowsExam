@@ -1,10 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
 using GameEngine;
 using BullsAndCows.IO;
-using System.Linq;
-using System.Reflection;
 
 namespace BullsAndCows
 {
